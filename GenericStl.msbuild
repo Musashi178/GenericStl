@@ -1,0 +1,29 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build" >
+
+    <PropertyGroup>
+      <Configuration>Debug</Configuration>
+
+      <NUnitToolPath>$(MSBuildProjectDirectory)\packages\NUnit.Runners.2.6.3\tools</NUnitToolPath>
+      <TestResultsPath>$(MSBuildProjectDirectory)\testresults.xml</TestResultsPath>
+    </PropertyGroup>
+    
+    <MSBuild Projects="GenericStl.sln" Targets="Build" Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="BuildOutputs" />
+    </MSBuild>
+    
+  </Target>
+  <Target Name="Test" DependsOnTargets="Build" >
+    <Delete Files="$(TestResultsPath)" />
+    
+    <ItemGroup>
+      <UnitTestAssemblies Include="%(BuildOutputs.Identity)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename), '\.Tests'))"/>
+    </ItemGroup>
+
+    <Exec Command='"$(NUnitToolPath)\nunit-console.exe" @(UnitTestAssemblies) /xml=$(TestResultsPath) ' />
+  </Target>
+  
+  <Target Name="Clean" >
+    <MSBuild Projects="GenericStl.sln" Targets="Clean" Properties="Configuration=$(Configuration)" />
+  </Target>
+</Project>  

@@ -12,8 +12,11 @@
     <MSBuild Projects="GenericStl.sln" Targets="Build" Properties="Configuration=$(Configuration)">
       <Output TaskParameter="TargetOutputs" ItemName="BuildOutputs" />
     </MSBuild>
+
+    <Message Text="@(BuildOutputs)" />
     
   </Target>
+  
   <Target Name="Test" DependsOnTargets="Build" >
     <Delete Files="$(TestResultsPath)" />
     
@@ -24,12 +27,8 @@
     <Exec Command='"$(NUnitToolPath)\nunit-console.exe" @(UnitTestAssemblies) /xml=$(TestResultsPath) ' />
   </Target>
 
-  <Target Name="Pack" DependsOnTargets="Build">
-    <Exec Command='"$(NuGetToolPath)\nuget.exe" pack GenericStl\GenericStl.csproj'/>
-  </Target>
-
   <Target Name="Publish" DependsOnTargets="Pack" >
-    
+    <Exec Command='"$(NuGetToolPath)\nuget.exe" pack GenericStl\GenericStl.csproj'/>
   </Target>
   
   <Target Name="Clean" >

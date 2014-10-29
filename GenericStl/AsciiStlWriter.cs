@@ -22,16 +22,21 @@ namespace GenericStl
         {
             using (var w = new StringWriter(CultureInfo.InvariantCulture))
             {
-                w.WriteLine("solid");
-
-                foreach (var triangle in triangles)
-                {
-                    WriteTriangle(w, triangle);
-                }
-
-                w.WriteLine("endsolid");
+                WriteTo(triangles, w);
                 return w.ToString();
             }
+        }
+
+        private void WriteTo(IEnumerable<TTriangle> triangles, TextWriter w)
+        {
+            w.WriteLine("solid");
+
+            foreach (var triangle in triangles)
+            {
+                WriteTriangle(w, triangle);
+            }
+
+            w.WriteLine("endsolid");
         }
 
         private void WriteTriangle(TextWriter w, TTriangle triangle)
@@ -63,7 +68,6 @@ namespace GenericStl
             w.Write(t.Item2);
             w.Write(" ");
             w.Write(t.Item3);
-            
         }
 
         private void WriteNormal(TextWriter w, TVector n)
@@ -72,6 +76,14 @@ namespace GenericStl
             w.Write("normal ");
             WriteTripleFloat(w, normalData);
             w.WriteLine();
+        }
+
+        public void WriteFile(IEnumerable<TTriangle> data, string filename)
+        {
+            using (var fs = File.CreateText(filename))
+            {
+                WriteTo(data, fs);
+            }
         }
     }
 }

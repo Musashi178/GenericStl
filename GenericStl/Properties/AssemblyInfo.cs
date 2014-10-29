@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("GenericStl")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A generic library for reading and writing STL files with integration of own data structures.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Marco Spatz")]
 [assembly: AssemblyProduct("GenericStl")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

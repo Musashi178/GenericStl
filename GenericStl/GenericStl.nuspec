@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GenericStl</id>
+    <version>$version$</version>
+    <title>GenericStl</title>
+    <authors>$author$</authors>
+    <owners>Marco Spatz</owners>
+    <licenseUrl>https://github.com/Musashi178/GenericStl/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Musashi178/GenericStl</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Implemented ascii and binary reading and writing of stl files.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>stl 3d</tags>
+  </metadata>
+</package>

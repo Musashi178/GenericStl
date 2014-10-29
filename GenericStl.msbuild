@@ -2,10 +2,11 @@
   <Target Name="Build" >
 
     <PropertyGroup>
-      <Configuration>Debug</Configuration>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 
-      <NUnitToolPath>$(MSBuildProjectDirectory)\packages\NUnit.Runners.2.6.3\tools</NUnitToolPath>
-      <TestResultsPath>$(MSBuildProjectDirectory)\testresults.xml</TestResultsPath>
+      <NUnitToolPath Condition=" '$(NUnitToolPath)' == '' ">$(MSBuildProjectDirectory)\packages\NUnit.Runners.2.6.3\tools</NUnitToolPath>
+      <NuGetToolPath Condition=" '$(NuGetToolPath)' == '' ">$(MSBuildProjectDirectory)\.nuget</NuGetToolPath>
+      <TestResultsPath Condition=" '$(TestResultsPath)' == '' ">$(MSBuildProjectDirectory)\testresults.xml</TestResultsPath>
     </PropertyGroup>
     
     <MSBuild Projects="GenericStl.sln" Targets="Build" Properties="Configuration=$(Configuration)">
@@ -21,6 +22,14 @@
     </ItemGroup>
 
     <Exec Command='"$(NUnitToolPath)\nunit-console.exe" @(UnitTestAssemblies) /xml=$(TestResultsPath) ' />
+  </Target>
+
+  <Target Name="Pack" DependsOnTargets="Build">
+    <Exec Command='"$(NuGetToolPath)\nuget.exe" pack GenericStl\GenericStl.csproj'/>
+  </Target>
+
+  <Target Name="Publish" DependsOnTargets="Pack" >
+    
   </Target>
   
   <Target Name="Clean" >

@@ -75,6 +75,9 @@
     <None Include="TestData\ascii_block.stl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\binary_block.stl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GenericStl\GenericStl.csproj">

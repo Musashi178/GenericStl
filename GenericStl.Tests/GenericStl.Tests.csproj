@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AsciiStlReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

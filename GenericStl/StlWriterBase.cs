@@ -31,6 +31,6 @@ namespace GenericStl
             ExtractNormal = extractNormal;
         }
 
-        public abstract void WriteFile(IEnumerable<TTriangle> data, string filename);
+        public abstract void WriteFile(IEnumerable<TTriangle> data, string fileName);
     }
 }

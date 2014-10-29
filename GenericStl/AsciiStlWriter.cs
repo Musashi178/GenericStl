@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 
 namespace GenericStl
 {
+    
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public class AsciiStlWriter<TTriangle, TNormal, TVertex> : StlWriterBase<TTriangle, TNormal, TVertex>
     {
         public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TNormal, Tuple<float, float, float>> extractNormal) : base(extractTriangle, extractVertex, extractNormal)
         {
         }
 
-        public override void WriteFile(IEnumerable<TTriangle> data, string filename)
+        public override void WriteFile(IEnumerable<TTriangle> data, string fileName)
         {
-            using (var fs = File.CreateText(filename))
+            using (var fs = File.CreateText(fileName))
             {
                 WriteTo(data, fs);
             }

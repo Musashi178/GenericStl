@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GenericStl
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public abstract class StlReaderBase<TTriangle, TNormal, TVertex> : IStlReader<TTriangle>
     {
         protected readonly Func<float, float, float, TNormal> CreateNormal;

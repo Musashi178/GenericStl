@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace GenericStl
 {
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public class BinaryStlWriter<TTriangle, TNormal, TVertex> : StlWriterBase<TTriangle, TNormal, TVertex>
     {
         private const int HeaderLengthInByte = 80;
@@ -12,20 +14,25 @@ namespace GenericStl
         {
         }
 
-        public override void WriteFile(IEnumerable<TTriangle> data, string filename)
+        public override void WriteFile(IEnumerable<TTriangle> data, string fileName)
         {
-            WriteFile(data, null, filename);
+            WriteFile(data, null, fileName);
         }
 
-        public void WriteFile(IEnumerable<TTriangle> data, byte[] header, string filename)
+        public void WriteFile(IEnumerable<TTriangle> data, byte[] header, string fileName)
         {
-            using (var fs = File.Create(filename))
+            using (var fs = File.Create(fileName))
             {
                 Write(fs, data, header);
             }
         }
 
-        public byte[] Write(IEnumerable<TTriangle> triangles, byte[] header = null)
+        public byte[] Write(IEnumerable<TTriangle> triangles)
+        {
+            return Write(triangles, null);
+        }
+
+        public byte[] Write(IEnumerable<TTriangle> triangles, byte[] header)
         {
             using (var s = new MemoryStream())
             {
@@ -35,7 +42,7 @@ namespace GenericStl
             }
         }
 
-        private void Write(Stream s, IEnumerable<TTriangle> triangles, byte[] header = null)
+        private void Write(Stream s, IEnumerable<TTriangle> triangles, byte[] header)
         {
             if (header != null && header.Length != 80)
             {

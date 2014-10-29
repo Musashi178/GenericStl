@@ -8,6 +8,7 @@ using MoreLinq;
 
 namespace GenericStl
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public class AsciiStlReader<TTriangle, TNormal, TVertex> : StlReaderBase<TTriangle, TNormal, TVertex>
     {
         private readonly Func<string, float> _parseFloat;
@@ -21,9 +22,9 @@ namespace GenericStl
         {
             return fileContent.Select(l => l.Trim())
                 .Where(l => !string.IsNullOrEmpty(l))
-                .SkipWhile(l => l.StartsWith("solid", StringComparison.InvariantCultureIgnoreCase))
-                .TakeWhile(l => !l.StartsWith("endsolid", StringComparison.InvariantCultureIgnoreCase))
-                .Split(l => string.Equals(l, "endfacet", StringComparison.InvariantCultureIgnoreCase))
+                .SkipWhile(l => l.StartsWith("solid", StringComparison.OrdinalIgnoreCase))
+                .TakeWhile(l => !l.StartsWith("endsolid", StringComparison.OrdinalIgnoreCase))
+                .Split(l => string.Equals(l, "endfacet", StringComparison.OrdinalIgnoreCase))
                 .Select(ToTriangle);
         }
 

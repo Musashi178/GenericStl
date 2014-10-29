@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsciiStlReader.cs" />
+    <Compile Include="AsciiStlWriter.cs" />
     <Compile Include="BinaryStlReader.cs" />
     <Compile Include="IStlReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

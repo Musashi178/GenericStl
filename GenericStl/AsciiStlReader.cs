@@ -41,11 +41,14 @@ namespace GenericStl
 
         private static IEnumerable<string> ReadLines(string fileName)
         {
-            using (var r = File.OpenText(fileName))
+            using (var fs = File.OpenRead(fileName))
             {
-                while (!r.EndOfStream)
+                using (var r = new StreamReader(fs))
                 {
-                    yield return r.ReadLine();
+                    while (!r.EndOfStream)
+                    {
+                        yield return r.ReadLine();
+                    }
                 }
             }
         }

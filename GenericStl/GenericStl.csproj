@@ -45,7 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsciiStlReader.cs" />
+    <Compile Include="BinaryStlReader.cs" />
+    <Compile Include="IStlReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StlReaderBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

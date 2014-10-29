@@ -8,19 +8,12 @@ using MoreLinq;
 
 namespace GenericStl
 {
-    public class AsciiStlReader<TTriangle, TVector, TVertex>
+    public class AsciiStlReader<TTriangle, TVector, TVertex> : StlReaderBase<TTriangle, TVector, TVertex>
     {
-        private readonly Func<float, float, float, TVector> _createNormal;
-        private readonly Func<TVertex, TVertex, TVertex, TVector, TTriangle> _createTriangle;
-        private readonly Func<float, float, float, TVertex> _createVertex;
         private readonly Func<string, float> _parseFloat;
 
-        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TVector, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TVector> createNormal)
+        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TVector, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TVector> createNormal) : base(createTriangle, createVertex, createNormal)
         {
-            _createTriangle = createTriangle;
-            _createNormal = createNormal;
-            _createVertex = createVertex;
-
             _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
         }
 
@@ -34,7 +27,7 @@ namespace GenericStl
                 .Select(ToTriangle);
         }
 
-        public IEnumerable<TTriangle> ReadFile(string fileName)
+        public override IEnumerable<TTriangle> ReadFile(string fileName)
         {
             return Read(ReadLines(fileName));
         }
@@ -63,7 +56,7 @@ namespace GenericStl
             var v2 = GetVertex(chunk[3]);
             var v3 = GetVertex(chunk[4]);
 
-            return _createTriangle(v1, v2, v3, normal);
+            return CreateTriangle(v1, v2, v3, normal);
         }
 
         private TVector GetNormal(string line)
@@ -73,7 +66,7 @@ namespace GenericStl
             Debug.Assert(string.Equals(segs[0], "facet", StringComparison.InvariantCultureIgnoreCase));
             Debug.Assert(string.Equals(segs[1], "normal", StringComparison.InvariantCultureIgnoreCase));
 
-            return _createNormal(_parseFloat(segs[2]), _parseFloat(segs[3]), _parseFloat(segs[4]));
+            return CreateNormal(_parseFloat(segs[2]), _parseFloat(segs[3]), _parseFloat(segs[4]));
         }
 
 
@@ -83,7 +76,7 @@ namespace GenericStl
 
             Debug.Assert(string.Equals(segs[0], "vertex", StringComparison.InvariantCultureIgnoreCase));
 
-            return _createVertex(_parseFloat(segs[1]), _parseFloat(segs[2]), _parseFloat(segs[3]));
+            return CreateVertex(_parseFloat(segs[1]), _parseFloat(segs[2]), _parseFloat(segs[3]));
         }
     }
 }

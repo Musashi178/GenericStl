@@ -8,35 +8,29 @@ using Triangle = System.Tuple<System.Tuple<float, float, float>, System.Tuple<fl
 namespace GenericStl.Tests
 {
     [TestFixture]
-    public class AsciiStlReaderTests
+    public class BinaryStlReaderTests
     {
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-           
-        }
-
         [SetUp]
         public void SetUp()
         {
-            _objectUnderTest = new AsciiStlReader<Triangle, Vertex, Normal>(TestHelpers.CreateTriangle, TestHelpers.CreateVertex, TestHelpers.CreateNormal);
+            _objectUnderTest = new BinaryStlReader<Triangle, Vertex, Normal>(TestHelpers.CreateTriangle, TestHelpers.CreateVertex, TestHelpers.CreateNormal);
         }
 
-        private const string AsciiTestFile = @".\TestData\ascii_block.stl";
-        private AsciiStlReader<Triangle, Vertex, Normal> _objectUnderTest;
+        private BinaryStlReader<Triangle, Vertex, Vertex> _objectUnderTest;
+        private const string BinaryTestFile = @".\TestData\binary_block.stl";
 
         [Test]
-        public void ReadFile_WithAsciiBlockFile_ReturnsExpectedTriangles()
+        public void ReadFile_WithBinaryBlockStl_ReturnsExpectedTriangles()
         {
-            var result = _objectUnderTest.ReadFile(AsciiTestFile);
+            var result = _objectUnderTest.ReadFile(BinaryTestFile);
 
             result.Should().BeEquivalentTo(TestHelpers.BlockExpectedResult);
         }
 
         [Test]
-        public void Read_WithAsciiBlockFile_ReturnsTheExpectedTriangles()
+        public void Read_WithBinaryBlockStl_ReturnsExpectedTriangles()
         {
-            var stlFileContent = File.ReadAllLines(AsciiTestFile);
+            var stlFileContent = File.ReadAllBytes(BinaryTestFile);
 
             var result = _objectUnderTest.Read(stlFileContent);
 

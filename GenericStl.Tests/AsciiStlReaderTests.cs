@@ -1,9 +1,7 @@
 ﻿using System.IO;
 using FluentAssertions;
+using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
-using Vertex = System.Tuple<float, float, float>;
-using Normal = System.Tuple<float, float, float>;
-using Triangle = System.Tuple<System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>>;
 
 namespace GenericStl.Tests
 {
@@ -28,7 +26,7 @@ namespace GenericStl.Tests
         [Test]
         public void ReadFile_WithAsciiBlockFile_ReturnsExpectedTriangles()
         {
-            var result = _objectUnderTest.ReadFile(AsciiTestFile);
+            var result = _objectUnderTest.ReadFromFile(AsciiTestFile);
 
             result.Should().BeEquivalentTo(TestHelpers.BlockExpectedResult);
         }

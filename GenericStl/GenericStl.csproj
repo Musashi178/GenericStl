@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="AsciiStlReader.cs" />
     <Compile Include="AsciiStlWriter.cs" />
-    <Compile Include="IStlWriterBase.cs" />
+    <Compile Include="IStlWriter.cs" />
     <Compile Include="StlWriterBase.cs" />
     <Compile Include="BinaryStlReader.cs" />
     <Compile Include="BinaryStlWriter.cs" />

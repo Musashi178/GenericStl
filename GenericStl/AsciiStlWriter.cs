@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace GenericStl
 {
-    
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
-    public class AsciiStlWriter<TTriangle, TNormal, TVertex> : StlWriterBase<TTriangle, TNormal, TVertex>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
+    public class AsciiStlWriter<TTriangle, TVertex, TNormal> : StlWriterBase<TTriangle, TVertex, TNormal>
     {
         public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TNormal, Tuple<float, float, float>> extractNormal) : base(extractTriangle, extractVertex, extractNormal)
         {
         }
 
-        public override void WriteFile(IEnumerable<TTriangle> data, string fileName)
+        public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)
         {
             using (var fs = File.CreateText(fileName))
             {
-                WriteTo(data, fs);
+                WriteTo(fs, data);
+            }
+        }
+
+        public override void WriteToStream(Stream s, IEnumerable<TTriangle> triangles)
+        {
+            using (var w = new StreamWriter(s, new UTF8Encoding(false, true), 1024, true))
+            {
+                WriteTo(w, triangles);
             }
         }
 
@@ -27,13 +35,15 @@ namespace GenericStl
         {
             using (var w = new StringWriter(CultureInfo.InvariantCulture))
             {
-                WriteTo(triangles, w);
+                WriteTo(w, triangles);
                 return w.ToString();
             }
         }
 
-        private void WriteTo(IEnumerable<TTriangle> triangles, TextWriter w)
+        private void WriteTo(TextWriter w, IEnumerable<TTriangle> triangles)
         {
+            Debug.Assert(w != null, "w != null");
+
             w.WriteLine("solid");
 
             foreach (var triangle in triangles)
@@ -68,11 +78,11 @@ namespace GenericStl
 
         private static void WriteTripleFloat(TextWriter w, Tuple<float, float, float> t)
         {
-            w.Write(t.Item1);
+            w.Write(t.Item1.ToString("r", CultureInfo.InvariantCulture));
             w.Write(" ");
-            w.Write(t.Item2);
+            w.Write(t.Item2.ToString("r", CultureInfo.InvariantCulture));
             w.Write(" ");
-            w.Write(t.Item3);
+            w.Write(t.Item3.ToString("r", CultureInfo.InvariantCulture));
         }
 
         private void WriteNormal(TextWriter w, TNormal n)

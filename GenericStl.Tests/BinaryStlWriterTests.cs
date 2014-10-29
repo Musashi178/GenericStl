@@ -1,11 +1,9 @@
 ﻿using System.IO;
 using ApprovalTests;
 using ApprovalTests.Reporters;
+using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
 
-using Vertex = System.Tuple<float, float, float>;
-using Normal = System.Tuple<float, float, float>;
-using Triangle = System.Tuple<System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>>;
 
 namespace GenericStl.Tests
 {
@@ -26,7 +24,7 @@ namespace GenericStl.Tests
         {
             var namer = Approvals.GetDefaultNamer();
             var file = Path.Combine(namer.SourcePath, namer.Name + ".received.stl");
-            _objectUnderTest.WriteFile(TestHelpers.BlockExpectedResult, file);
+            _objectUnderTest.WriteToFile(file, TestHelpers.BlockExpectedResult);
             Approvals.Verify(new FileInfo(file));
         }
 

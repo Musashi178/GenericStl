@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 
 namespace GenericStl
 {
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
-    public class BinaryStlWriter<TTriangle, TNormal, TVertex> : StlWriterBase<TTriangle, TNormal, TVertex>
+    public class BinaryStlWriter<TTriangle, TVertex, TNormal> : StlWriterBase<TTriangle, TVertex, TNormal>
     {
         private const int HeaderLengthInByte = 80;
 
@@ -14,16 +15,21 @@ namespace GenericStl
         {
         }
 
-        public override void WriteFile(IEnumerable<TTriangle> data, string fileName)
+        public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)
         {
-            WriteFile(data, null, fileName);
+            WriteToFile(fileName, data, null);
         }
 
-        public void WriteFile(IEnumerable<TTriangle> data, byte[] header, string fileName)
+        public override void WriteToStream(Stream s, IEnumerable<TTriangle> triangles)
+        {
+            WriteToStream(s, triangles, null);
+        }
+
+        public void WriteToFile(string fileName, IEnumerable<TTriangle> data, byte[] header)
         {
             using (var fs = File.Create(fileName))
             {
-                Write(fs, data, header);
+                WriteToStream(fs, data, header);
             }
         }
 
@@ -36,20 +42,19 @@ namespace GenericStl
         {
             using (var s = new MemoryStream())
             {
-                Write(s, triangles, header);
-
+                WriteToStream(s, triangles, header);
                 return s.ToArray();
             }
         }
 
-        private void Write(Stream s, IEnumerable<TTriangle> triangles, byte[] header)
+        public void WriteToStream(Stream s, IEnumerable<TTriangle> triangles, byte[] header)
         {
             if (header != null && header.Length != 80)
             {
                 throw new ArgumentException("header must have a size of 80 bytes.", "header");
             }
 
-            using (var w = new BinaryWriter(s))
+            using (var w = new BinaryWriter(s, new UTF8Encoding(false, true), true))
             {
                 WriteHeader(w, header ?? new byte[HeaderLengthInByte]);
                 WriteLength(w, 0);

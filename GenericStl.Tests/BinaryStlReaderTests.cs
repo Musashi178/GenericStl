@@ -1,9 +1,7 @@
 ﻿using System.IO;
 using FluentAssertions;
+using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
-using Vertex = System.Tuple<float, float, float>;
-using Normal = System.Tuple<float, float, float>;
-using Triangle = System.Tuple<System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>, System.Tuple<float, float, float>>;
 
 namespace GenericStl.Tests
 {
@@ -16,13 +14,13 @@ namespace GenericStl.Tests
             _objectUnderTest = new BinaryStlReader<Triangle, Vertex, Normal>(TestHelpers.CreateTriangle, TestHelpers.CreateVertex, TestHelpers.CreateNormal);
         }
 
-        private BinaryStlReader<Triangle, Vertex, Vertex> _objectUnderTest;
+        private BinaryStlReader<Triangle, Vertex, Normal> _objectUnderTest;
         private const string BinaryTestFile = @".\TestData\binary_block.stl";
 
         [Test]
         public void ReadFile_WithBinaryBlockStl_ReturnsExpectedTriangles()
         {
-            var result = _objectUnderTest.ReadFile(BinaryTestFile);
+            var result = _objectUnderTest.ReadFromFile(BinaryTestFile);
 
             result.Should().BeEquivalentTo(TestHelpers.BlockExpectedResult);
         }

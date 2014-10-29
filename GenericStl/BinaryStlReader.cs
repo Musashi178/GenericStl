@@ -2,33 +2,39 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace GenericStl
 {
-    public class BinaryStlReader<TTriangle, TNormal, TVertex> : StlReaderBase<TTriangle, TNormal, TVertex>
+    public class BinaryStlReader<TTriangle, TVertex, TNormal> : StlReaderBase<TTriangle, TVertex, TNormal>
     {
         public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
         {
 
         }
 
-        public override IEnumerable<TTriangle> ReadFile(string fileName)
+        public override IEnumerable<TTriangle> ReadFromFile(string fileName)
         {
             using (var fs = File.OpenRead(fileName))
             {
-                foreach (var triangle in Read(fs)) yield return triangle;
+                foreach (var triangle in ReadFromStream(fs)) yield return triangle;
             }
         }
 
-        private IEnumerable<TTriangle> Read(Stream s)
+        public override IEnumerable<TTriangle> ReadFromStream(Stream s)
         {
-            using (var reader = new BinaryReader(s))
+            if (s == null)
+            {
+                throw new ArgumentNullException("s");
+            }
+
+            using (var reader = new BinaryReader(s, Encoding.UTF8, true))
             {
                 reader.ReadBytes(80); //header
 
                 var numTriangles = reader.ReadInt32();
 
-                for (int i = 0; i < numTriangles; ++i)
+                for (var i = 0; i < numTriangles; ++i)
                 {
                     yield return ReadTriangle(reader);
                 }
@@ -65,7 +71,7 @@ namespace GenericStl
         {
             using (var s = new MemoryStream(data, false))
             {
-                foreach (var triangle in Read(s)) yield return triangle;
+                foreach (var triangle in ReadFromStream(s)) yield return triangle;
             }    
         }
     }

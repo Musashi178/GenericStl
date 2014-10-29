@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using MoreLinq;
 
 namespace GenericStl
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
-    public class AsciiStlReader<TTriangle, TNormal, TVertex> : StlReaderBase<TTriangle, TNormal, TVertex>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
+    public class AsciiStlReader<TTriangle, TVertex, TNormal> : StlReaderBase<TTriangle, TVertex, TNormal>
     {
+        private const int DefaultBufferSize = 1024;
         private readonly Func<string, float> _parseFloat;
 
         public AsciiStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
@@ -28,21 +31,29 @@ namespace GenericStl
                 .Select(ToTriangle);
         }
 
-        public override IEnumerable<TTriangle> ReadFile(string fileName)
-        {
-            return Read(ReadLines(fileName));
-        }
-
-        private static IEnumerable<string> ReadLines(string fileName)
+        public override IEnumerable<TTriangle> ReadFromFile(string fileName)
         {
             using (var fs = File.OpenRead(fileName))
             {
-                using (var r = new StreamReader(fs))
+                foreach (var triangle in ReadFromStream(fs))
                 {
-                    while (!r.EndOfStream)
-                    {
-                        yield return r.ReadLine();
-                    }
+                    yield return triangle;
+                }
+            }
+        }
+
+        public override IEnumerable<TTriangle> ReadFromStream(Stream s)
+        {
+            return Read(ReadLines(s));
+        }
+
+        private static IEnumerable<string> ReadLines(Stream s)
+        {
+            using (var r = new StreamReader(s, Encoding.UTF8, true, DefaultBufferSize, true))
+            {
+                while (!r.EndOfStream)
+                {
+                    yield return r.ReadLine();
                 }
             }
         }

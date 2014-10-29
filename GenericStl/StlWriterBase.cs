@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace GenericStl
 {
-    public abstract class StlWriterBase<TTriangle, TNormal, TVertex> : IStlWriterBase<TTriangle>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
+    public abstract class StlWriterBase<TTriangle, TVertex, TNormal> : IStlWriter<TTriangle>
     {
         protected readonly Func<TNormal, Tuple<float, float, float>> ExtractNormal;
         protected readonly Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> ExtractTriangle;
@@ -31,6 +34,7 @@ namespace GenericStl
             ExtractNormal = extractNormal;
         }
 
-        public abstract void WriteFile(IEnumerable<TTriangle> data, string fileName);
+        public abstract void WriteToFile(string fileName, IEnumerable<TTriangle> data);
+        public abstract void WriteToStream(Stream s, IEnumerable<TTriangle> triangles);
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace GenericStl
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
-    public abstract class StlReaderBase<TTriangle, TNormal, TVertex> : IStlReader<TTriangle>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
+    public abstract class StlReaderBase<TTriangle, TVertex, TNormal> : IStlReader<TTriangle>
     {
         protected readonly Func<float, float, float, TNormal> CreateNormal;
         protected readonly Func<TVertex, TVertex, TVertex, TNormal, TTriangle> CreateTriangle;
@@ -16,10 +18,12 @@ namespace GenericStl
             {
                 throw new ArgumentNullException("createTriangle");
             }
+
             if (createVertex == null)
             {
                 throw new ArgumentNullException("createVertex");
             }
+
             if (createNormal == null)
             {
                 throw new ArgumentNullException("createNormal");
@@ -30,6 +34,7 @@ namespace GenericStl
             CreateVertex = createVertex;
         }
 
-        public abstract IEnumerable<TTriangle> ReadFile(string fileName);
+        public abstract IEnumerable<TTriangle> ReadFromFile(string fileName);
+        public abstract IEnumerable<TTriangle> ReadFromStream(Stream s);
     }
 }

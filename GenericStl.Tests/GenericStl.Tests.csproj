@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AsciiStlReaderTests.cs" />
     <Compile Include="AsciiStlWriterTests.cs" />
+    <Compile Include="StlReaderTests.cs" />
     <Compile Include="SymmetryTests.cs" />
     <Compile Include="BinaryStlReaderTests.cs" />
     <Compile Include="BinaryStlWriterTests.cs" />

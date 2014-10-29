@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace GenericStl
 {
-    public abstract class StlReaderBase<TTriangle, TVector, TVertex> : IStlReader<TTriangle>
+    public abstract class StlReaderBase<TTriangle, TNormal, TVertex> : IStlReader<TTriangle>
     {
-        protected readonly Func<float, float, float, TVector> CreateNormal;
-        protected readonly Func<TVertex, TVertex, TVertex, TVector, TTriangle> CreateTriangle;
+        protected readonly Func<float, float, float, TNormal> CreateNormal;
+        protected readonly Func<TVertex, TVertex, TVertex, TNormal, TTriangle> CreateTriangle;
         protected readonly Func<float, float, float, TVertex> CreateVertex;
 
-        protected StlReaderBase(Func<TVertex, TVertex, TVertex, TVector, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TVector> createNormal)
+        protected StlReaderBase(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal)
         {
             if (createTriangle == null)
             {

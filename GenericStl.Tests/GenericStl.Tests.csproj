@@ -75,6 +75,7 @@
     <Compile Include="AsciiStlReaderTests.cs" />
     <Compile Include="AsciiStlWriterTests.cs" />
     <Compile Include="BinaryStlReaderTests.cs" />
+    <Compile Include="BinaryStlWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
   </ItemGroup>

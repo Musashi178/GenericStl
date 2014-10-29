@@ -8,11 +8,11 @@ using MoreLinq;
 
 namespace GenericStl
 {
-    public class AsciiStlReader<TTriangle, TVector, TVertex> : StlReaderBase<TTriangle, TVector, TVertex>
+    public class AsciiStlReader<TTriangle, TNormal, TVertex> : StlReaderBase<TTriangle, TNormal, TVertex>
     {
         private readonly Func<string, float> _parseFloat;
 
-        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TVector, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TVector> createNormal) : base(createTriangle, createVertex, createNormal)
+        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
         {
             _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
         }
@@ -59,7 +59,7 @@ namespace GenericStl
             return CreateTriangle(v1, v2, v3, normal);
         }
 
-        private TVector GetNormal(string line)
+        private TNormal GetNormal(string line)
         {
             var segs = line.Split(' ');
 

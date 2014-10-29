@@ -5,9 +5,9 @@ using System.IO;
 
 namespace GenericStl
 {
-    public class BinaryStlReader<TTriangle, TVector, TVertex> : StlReaderBase<TTriangle, TVector, TVertex>
+    public class BinaryStlReader<TTriangle, TNormal, TVertex> : StlReaderBase<TTriangle, TNormal, TVertex>
     {
-        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TVector, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TVector> createNormal) : base(createTriangle, createVertex, createNormal)
+        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
         {
 
         }
@@ -56,7 +56,7 @@ namespace GenericStl
             return CreateVertex(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
 
-        private TVector ReadNormal(BinaryReader reader)
+        private TNormal ReadNormal(BinaryReader reader)
         {
             return CreateNormal(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }

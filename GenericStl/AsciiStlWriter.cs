@@ -5,17 +5,18 @@ using System.IO;
 
 namespace GenericStl
 {
-    public class AsciiStlWriter<TTriangle, TVector, TVertex>
+    public class AsciiStlWriter<TTriangle, TNormal, TVertex> : StlWriterBase<TTriangle, TNormal, TVertex>
     {
-        private readonly Func<TVector, Tuple<float, float, float>> _extractNormal;
-        private readonly Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TVector>> _extractTriangle;
-        private readonly Func<TVertex, Tuple<float, float, float>> _extractVertex;
-
-        public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TVector>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TVector, Tuple<float, float, float>> extractNormal)
+        public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TNormal, Tuple<float, float, float>> extractNormal) : base(extractTriangle, extractVertex, extractNormal)
         {
-            _extractTriangle = extractTriangle;
-            _extractVertex = extractVertex;
-            _extractNormal = extractNormal;
+        }
+
+        public override void WriteFile(IEnumerable<TTriangle> data, string filename)
+        {
+            using (var fs = File.CreateText(filename))
+            {
+                WriteTo(data, fs);
+            }
         }
 
         public string Write(IEnumerable<TTriangle> triangles)
@@ -41,7 +42,7 @@ namespace GenericStl
 
         private void WriteTriangle(TextWriter w, TTriangle triangle)
         {
-            var triangleData = _extractTriangle(triangle);
+            var triangleData = ExtractTriangle(triangle);
 
             w.Write("facet ");
             WriteNormal(w, triangleData.Item4);
@@ -55,7 +56,7 @@ namespace GenericStl
 
         private void WriteVertex(TextWriter w, TVertex v)
         {
-            var vertexData = _extractVertex(v);
+            var vertexData = ExtractVertex(v);
             w.Write("vertex ");
             WriteTripleFloat(w, vertexData);
             w.WriteLine();
@@ -70,20 +71,12 @@ namespace GenericStl
             w.Write(t.Item3);
         }
 
-        private void WriteNormal(TextWriter w, TVector n)
+        private void WriteNormal(TextWriter w, TNormal n)
         {
-            var normalData = _extractNormal(n);
+            var normalData = ExtractNormal(n);
             w.Write("normal ");
             WriteTripleFloat(w, normalData);
             w.WriteLine();
-        }
-
-        public void WriteFile(IEnumerable<TTriangle> data, string filename)
-        {
-            using (var fs = File.CreateText(filename))
-            {
-                WriteTo(data, fs);
-            }
         }
     }
 }

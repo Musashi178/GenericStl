@@ -1,0 +1,37 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build" >
+
+    <PropertyGroup>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+
+      <NUnitToolPath Condition=" '$(NUnitToolPath)' == '' ">$(MSBuildProjectDirectory)\packages\NUnit.Runners.2.6.3\tools</NUnitToolPath>
+      <NuGetToolPath Condition=" '$(NuGetToolPath)' == '' ">$(MSBuildProjectDirectory)\.nuget</NuGetToolPath>
+      <TestResultsPath Condition=" '$(TestResultsPath)' == '' ">$(MSBuildProjectDirectory)\testresults.xml</TestResultsPath>
+    </PropertyGroup>
+    
+    <MSBuild Projects="GenericStl.sln" Targets="Build" Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="BuildOutputs" />
+    </MSBuild>
+
+    <Message Text="@(BuildOutputs)" />
+    
+  </Target>
+  
+  <Target Name="Test" DependsOnTargets="Build" >
+    <Delete Files="$(TestResultsPath)" />
+    
+    <ItemGroup>
+      <UnitTestAssemblies Include="%(BuildOutputs.Identity)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Filename), '\.Tests'))"/>
+    </ItemGroup>
+
+    <Exec Command='"$(NUnitToolPath)\nunit-console.exe" @(UnitTestAssemblies) /xml=$(TestResultsPath) ' />
+  </Target>
+
+  <Target Name="Publish" DependsOnTargets="Pack" >
+    <Exec Command='"$(NuGetToolPath)\nuget.exe" pack GenericStl\GenericStl.csproj'/>
+  </Target>
+  
+  <Target Name="Clean" >
+    <MSBuild Projects="GenericStl.sln" Targets="Clean" Properties="Configuration=$(Configuration)" />
+  </Target>
+</Project>  

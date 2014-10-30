@@ -32,7 +32,7 @@ namespace GenericStl
             return new AsciiStlReader<TTriangle, TVertex, TNormal>(CreateTriangle, CreateVertex, CreateNormal).ReadFromStream(s);
         }
 
-        private bool IsBinaryStl(Stream stream)
+        public static bool IsBinaryStl(Stream stream)
         {
             try
             {

@@ -15,6 +15,13 @@ namespace GenericStl
         {
         }
 
+        public BinaryStlWriter(IDataStructureExtractor<TTriangle, TVertex, TNormal> extractor)
+            : base(extractor)
+        {
+            
+        }
+
+
         public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)
         {
             WriteToFile(fileName, data, null);

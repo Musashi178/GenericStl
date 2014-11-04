@@ -34,6 +34,18 @@ namespace GenericStl
             ExtractNormal = extractNormal;
         }
 
+        protected StlWriterBase(IDataStructureExtractor<TTriangle, TVertex, TNormal> extractor)
+        {
+            if (extractor == null)
+            {
+                throw new ArgumentNullException("extractor");
+            }
+
+            ExtractTriangle = extractor.ExtractTriangle;
+            ExtractVertex = extractor.ExtractVertex;
+            ExtractNormal = extractor.ExtractNormal;
+        }
+
         public abstract void WriteToFile(string fileName, IEnumerable<TTriangle> data);
         public abstract void WriteToStream(Stream s, IEnumerable<TTriangle> triangles);
     }

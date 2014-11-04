@@ -34,6 +34,18 @@ namespace GenericStl
             CreateVertex = createVertex;
         }
 
+        protected StlReaderBase(IDataReaderFactory<TTriangle, TVertex, TNormal> dataReaderFactory)
+        {
+            if (dataReaderFactory == null)
+            {
+                throw new ArgumentNullException("dataReaderFactory");
+            }
+
+            CreateTriangle = dataReaderFactory.CreateTriangle;
+            CreateNormal = dataReaderFactory.CreateNormal;
+            CreateVertex = dataReaderFactory.CreateVertex;
+        }
+
         public abstract IEnumerable<TTriangle> ReadFromFile(string fileName);
         public abstract IEnumerable<TTriangle> ReadFromStream(Stream s);
     }

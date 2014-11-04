@@ -13,6 +13,11 @@ namespace GenericStl
 
         }
 
+        public BinaryStlReader(IDataReaderFactory<TTriangle, TVertex, TNormal> readerFactory) : base(readerFactory)
+        {
+            
+        }
+
         public override IEnumerable<TTriangle> ReadFromFile(string fileName)
         {
             using (var fs = File.OpenRead(fileName))

@@ -11,8 +11,15 @@ namespace GenericStl
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public class AsciiStlWriter<TTriangle, TVertex, TNormal> : StlWriterBase<TTriangle, TVertex, TNormal>
     {
-        public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TNormal, Tuple<float, float, float>> extractNormal) : base(extractTriangle, extractVertex, extractNormal)
+        public AsciiStlWriter(Func<TTriangle, Tuple<TVertex, TVertex, TVertex, TNormal>> extractTriangle, Func<TVertex, Tuple<float, float, float>> extractVertex, Func<TNormal, Tuple<float, float, float>> extractNormal) 
+            : base(extractTriangle, extractVertex, extractNormal)
         {
+        }
+
+        public AsciiStlWriter(IDataStructureExtractor<TTriangle, TVertex, TNormal> extractor)
+            : base(extractor)
+        {
+            
         }
 
         public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)

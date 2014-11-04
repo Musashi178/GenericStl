@@ -22,16 +22,31 @@ namespace GenericStl
             
         }
 
-        public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)
+        public override void WriteToFile(string fileName, IEnumerable<TTriangle> triangles)
         {
+            if (triangles == null)
+            {
+                throw new ArgumentNullException("triangles");
+            }
+
             using (var fs = File.CreateText(fileName))
             {
-                WriteTo(fs, data);
+                WriteTo(fs, triangles);
             }
         }
 
         public override void WriteToStream(Stream s, IEnumerable<TTriangle> triangles)
         {
+            if (s == null)
+            {
+                throw new ArgumentNullException("s");
+            }
+
+            if (triangles == null)
+            {
+                throw new ArgumentNullException("triangles");
+            }
+
             using (var w = new StreamWriter(s, new UTF8Encoding(false, true), 1024, true))
             {
                 WriteTo(w, triangles);

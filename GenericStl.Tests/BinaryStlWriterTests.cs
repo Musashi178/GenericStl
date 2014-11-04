@@ -11,14 +11,7 @@ namespace GenericStl.Tests
     [UseReporter(typeof (NUnitReporter))]
     public class BinaryStlWriterTests : StlWriterBaseTests<BinaryStlWriter<Triangle, Vertex, Normal>>
     {
-        [SetUp]
-        public void SetUp()
-        {
-            _objectUnderTest = new BinaryStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal);
-        }
-
-        private BinaryStlWriter<Triangle, Vertex, Normal> _objectUnderTest;
-
+       
         protected override BinaryStlWriter<Triangle, Vertex, Normal> CreateWriter(Func<Triangle, Tuple<Vertex, Vertex, Vertex, Normal>> extractTriangle, Func<Vertex, Tuple<float, float, float>> extractVertex, Func<Normal, Tuple<float, float, float>> extractNormal)
         {
             return new BinaryStlWriter<Triangle, Vertex, Normal>(extractTriangle, extractVertex, extractNormal);
@@ -34,14 +27,14 @@ namespace GenericStl.Tests
         {
             var namer = Approvals.GetDefaultNamer();
             var file = Path.Combine(namer.SourcePath, namer.Name + ".received.stl");
-            _objectUnderTest.WriteToFile(file, TestHelpers.BlockExpectedResult);
+            ObjectUnderTest.WriteToFile(file, TestHelpers.BlockExpectedResult);
             Approvals.Verify(new FileInfo(file));
         }
 
         [Test]
         public void Write_WithBlock_ReturnsExpectedResult()
         {
-            var result = _objectUnderTest.Write(TestHelpers.BlockExpectedResult);
+            var result = ObjectUnderTest.Write(TestHelpers.BlockExpectedResult);
             Approvals.VerifyBinaryFile(result, ".stl");
         }
     }

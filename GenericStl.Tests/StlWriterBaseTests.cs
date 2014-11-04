@@ -1,11 +1,12 @@
 using System;
+using System.IO;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
 
 namespace GenericStl.Tests
 {
-    public abstract class StlWriterBaseTests<TStlWriterImplementation> where TStlWriterImplementation : StlWriterBase<Triangle, Vertex, Normal>
+    public abstract class StlWriterBaseTests<TWriterImpl> where TWriterImpl : StlWriterBase<Triangle, Vertex, Normal>
     {
         protected readonly Func<Normal, Tuple<float, float, float>>[] ExtractNormalFuncData = new Func<Normal, Tuple<float, float, float>>[]
         {
@@ -24,6 +25,20 @@ namespace GenericStl.Tests
             null,
             TestDataStructureHelpers.ExtractVertex
         };
+
+        protected TWriterImpl ObjectUnderTest;
+
+        [SetUp]
+        public void SetUp()
+        {
+            ObjectUnderTest = CreateWriter(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            ObjectUnderTest = null;
+        }
 
         [Test]
         public void Ctor_WithNullCreator_ThrowsArgumentNullException()
@@ -46,7 +61,24 @@ namespace GenericStl.Tests
             call.ShouldThrow<ArgumentNullException>();
         }
 
-        protected abstract TStlWriterImplementation CreateWriter(Func<Triangle, Tuple<Vertex, Vertex, Vertex, Normal>> extractTriangle, Func<Vertex, Tuple<float, float, float>> extractVertex, Func<Normal, Tuple<float, float, float>> extractNormal);
-        protected abstract TStlWriterImplementation CreateWriter(IDataStructureExtractor<Triangle, Vertex, Normal> extractor);
+        [Test]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public void WriteToStream_WithNullStream_ThrowsArgumentNullException()
+        {
+            ObjectUnderTest.WriteToStream(null, TestHelpers.BlockExpectedResult);
+        }
+
+        [Test]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public void WriteToStream_WithNullTriangles_ThrowsArgumentNullException()
+        {
+            using (var ms = new MemoryStream())
+            {
+                ObjectUnderTest.WriteToStream(ms, null);
+            }
+        }
+
+        protected abstract TWriterImpl CreateWriter(Func<Triangle, Tuple<Vertex, Vertex, Vertex, Normal>> extractTriangle, Func<Vertex, Tuple<float, float, float>> extractVertex, Func<Normal, Tuple<float, float, float>> extractNormal);
+        protected abstract TWriterImpl CreateWriter(IDataStructureExtractor<Triangle, Vertex, Normal> extractor);
     }
 }

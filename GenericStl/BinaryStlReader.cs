@@ -8,14 +8,15 @@ namespace GenericStl
 {
     public class BinaryStlReader<TTriangle, TVertex, TNormal> : StlReaderBase<TTriangle, TVertex, TNormal>
     {
-        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
+        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) 
+            : base(createTriangle, createVertex, createNormal)
         {
 
         }
 
-        public BinaryStlReader(IDataReaderFactory<TTriangle, TVertex, TNormal> readerFactory) : base(readerFactory)
-        {
-            
+        public BinaryStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
+            : base(structureCreator)
+        {  
         }
 
         public override IEnumerable<TTriangle> ReadFromFile(string fileName)

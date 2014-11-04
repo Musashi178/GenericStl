@@ -34,16 +34,16 @@ namespace GenericStl
             CreateVertex = createVertex;
         }
 
-        protected StlReaderBase(IDataReaderFactory<TTriangle, TVertex, TNormal> dataReaderFactory)
+        protected StlReaderBase(IDataStructureCreator<TTriangle, TVertex, TNormal> dataStructureCreator)
         {
-            if (dataReaderFactory == null)
+            if (dataStructureCreator == null)
             {
-                throw new ArgumentNullException("dataReaderFactory");
+                throw new ArgumentNullException("dataStructureCreator");
             }
 
-            CreateTriangle = dataReaderFactory.CreateTriangle;
-            CreateNormal = dataReaderFactory.CreateNormal;
-            CreateVertex = dataReaderFactory.CreateVertex;
+            CreateTriangle = dataStructureCreator.CreateTriangle;
+            CreateNormal = dataStructureCreator.CreateNormal;
+            CreateVertex = dataStructureCreator.CreateVertex;
         }
 
         public abstract IEnumerable<TTriangle> ReadFromFile(string fileName);

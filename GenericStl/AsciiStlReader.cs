@@ -22,8 +22,8 @@ namespace GenericStl
             _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
         }
 
-        public AsciiStlReader(IDataReaderFactory<TTriangle, TVertex, TNormal> readerFactory)
-            : base(readerFactory)
+        public AsciiStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
+            : base(structureCreator)
         {  
         }
 

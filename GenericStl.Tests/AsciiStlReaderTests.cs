@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
@@ -6,22 +7,31 @@ using NUnit.Framework;
 namespace GenericStl.Tests
 {
     [TestFixture]
-    public class AsciiStlReaderTests
+    public class AsciiStlReaderTests : StlReaderBaseTests<AsciiStlReader<Triangle, Vertex, Normal>>
     {
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-           
-        }
-
         [SetUp]
         public void SetUp()
         {
-            _objectUnderTest = new AsciiStlReader<Triangle, Vertex, Normal>(TestHelpers.CreateTriangle, TestHelpers.CreateVertex, TestHelpers.CreateNormal);
+            _objectUnderTest = new AsciiStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal);
+        }
+
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
         }
 
         private const string AsciiTestFile = @".\TestData\ascii_block.stl";
         private AsciiStlReader<Triangle, Vertex, Normal> _objectUnderTest;
+
+        protected override AsciiStlReader<Triangle, Vertex, Normal> CreateReader(Func<Vertex, Vertex, Vertex, Normal, Triangle> createTriangle, Func<float, float, float, Vertex> createVertex, Func<float, float, float, Normal> createNormal)
+        {
+            return new AsciiStlReader<Triangle, Vertex, Normal>(createTriangle, createVertex, createNormal);
+        }
+
+        protected override AsciiStlReader<Triangle, Vertex, Normal> CreateReader(IDataStructureCreator<Triangle, Vertex, Normal> structureCreator)
+        {
+            return new AsciiStlReader<Triangle, Vertex, Normal>(structureCreator);
+        }
 
         [Test]
         public void ReadFile_WithAsciiBlockFile_ReturnsExpectedTriangles()

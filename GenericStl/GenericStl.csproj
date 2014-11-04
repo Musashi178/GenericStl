@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="AsciiStlReader.cs" />
     <Compile Include="AsciiStlWriter.cs" />
+    <Compile Include="IDataStructureCreator.cs" />
+    <Compile Include="IDataStructureExtractor.cs" />
     <Compile Include="IStlWriter.cs" />
     <Compile Include="StlReader.cs" />
     <Compile Include="StlWriterBase.cs" />

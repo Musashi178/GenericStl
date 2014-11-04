@@ -18,7 +18,6 @@ namespace GenericStl
         public BinaryStlWriter(IDataStructureExtractor<TTriangle, TVertex, TNormal> extractor)
             : base(extractor)
         {
-            
         }
 
 

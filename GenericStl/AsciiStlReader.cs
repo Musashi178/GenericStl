@@ -16,9 +16,15 @@ namespace GenericStl
         private const int DefaultBufferSize = 1024;
         private readonly Func<string, float> _parseFloat;
 
-        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) : base(createTriangle, createVertex, createNormal)
+        public AsciiStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal)
+            : base(createTriangle, createVertex, createNormal)
         {
             _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
+        }
+
+        public AsciiStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
+            : base(structureCreator)
+        {  
         }
 
         public IEnumerable<TTriangle> Read(IEnumerable<string> fileContent)

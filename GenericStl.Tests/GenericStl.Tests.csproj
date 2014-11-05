@@ -78,11 +78,16 @@
   <ItemGroup>
     <Compile Include="AsciiStlReaderTests.cs" />
     <Compile Include="AsciiStlWriterTests.cs" />
+    <Compile Include="StlReaderBaseTests.cs" />
     <Compile Include="StlReaderTests.cs" />
+    <Compile Include="StlWriterBaseTests.cs" />
     <Compile Include="SymmetryTests.cs" />
     <Compile Include="BinaryStlReaderTests.cs" />
     <Compile Include="BinaryStlWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDataStructures\Creator.cs" />
+    <Compile Include="TestDataStructures\Extractor.cs" />
+    <Compile Include="TestDataStructures\TestDataStructureHelpers.cs" />
     <Compile Include="TestDataStructures\Triangle.cs" />
     <Compile Include="TestDataStructures\Normal.cs" />
     <Compile Include="TestDataStructures\Vertex.cs" />

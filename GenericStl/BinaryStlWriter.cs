@@ -15,9 +15,15 @@ namespace GenericStl
         {
         }
 
-        public override void WriteToFile(string fileName, IEnumerable<TTriangle> data)
+        public BinaryStlWriter(IDataStructureExtractor<TTriangle, TVertex, TNormal> extractor)
+            : base(extractor)
         {
-            WriteToFile(fileName, data, null);
+        }
+
+
+        public override void WriteToFile(string fileName, IEnumerable<TTriangle> triangles)
+        {
+            WriteToFile(fileName, triangles, null);
         }
 
         public override void WriteToStream(Stream s, IEnumerable<TTriangle> triangles)
@@ -25,11 +31,11 @@ namespace GenericStl
             WriteToStream(s, triangles, null);
         }
 
-        public void WriteToFile(string fileName, IEnumerable<TTriangle> data, byte[] header)
+        public void WriteToFile(string fileName, IEnumerable<TTriangle> triangles, byte[] header)
         {
             using (var fs = File.Create(fileName))
             {
-                WriteToStream(fs, data, header);
+                WriteToStream(fs, triangles, header);
             }
         }
 
@@ -49,6 +55,11 @@ namespace GenericStl
 
         public void WriteToStream(Stream s, IEnumerable<TTriangle> triangles, byte[] header)
         {
+            if (triangles == null)
+            {
+                throw new ArgumentNullException("triangles");
+            }
+
             if (header != null && header.Length != 80)
             {
                 throw new ArgumentException("header must have a size of 80 bytes.", "header");

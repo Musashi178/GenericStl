@@ -15,7 +15,7 @@ namespace GenericStl.Tests
         [SetUp]
         public void SetUp()
         {
-            _objectUnderTest = new StlReader<Triangle, Vertex, Normal>(TestHelpers.CreateTriangle, TestHelpers.CreateVertex, TestHelpers.CreateNormal);
+            _objectUnderTest = new StlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal);
         }
 
         public IEnumerable StlFiles

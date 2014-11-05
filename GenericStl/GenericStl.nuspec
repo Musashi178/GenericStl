@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Musashi178/GenericStl</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Implemented ascii and binary reading and writing of stl files.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>stl 3d</tags>
   </metadata>

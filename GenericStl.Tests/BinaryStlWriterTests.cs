@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using GenericStl.Tests.TestDataStructures;
@@ -35,6 +37,24 @@ namespace GenericStl.Tests
         public void Write_WithBlock_ReturnsExpectedResult()
         {
             var result = ObjectUnderTest.Write(TestHelpers.BlockExpectedResult);
+            Approvals.VerifyBinaryFile(result, ".stl");
+        }
+
+        [Test]
+        public void Write_WithSmallHeader_ReturnsExpectedResult()
+        {
+            var hdr = new ASCIIEncoding().GetBytes("short header");
+            var result = ObjectUnderTest.Write(TestHelpers.BlockExpectedResult, hdr);
+            Approvals.VerifyBinaryFile(result, ".stl");
+        }
+
+        [Test]
+        public void Write_WithLargeHeader_ReturnsExpectedResult()
+        {
+            var hdr = string.Join("", Enumerable.Repeat("abcdefghijklmnopqrstuvwxyz1234567890", 10));
+            var hdrBytes = new ASCIIEncoding().GetBytes(hdr);
+
+            var result = ObjectUnderTest.Write(TestHelpers.BlockExpectedResult, hdrBytes);
             Approvals.VerifyBinaryFile(result, ".stl");
         }
     }

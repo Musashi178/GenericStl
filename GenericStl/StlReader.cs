@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace GenericStl
 {
@@ -24,30 +23,23 @@ namespace GenericStl
 
         public override IEnumerable<TTriangle> ReadFromStream(Stream s)
         {
-            if (IsBinaryStl(s))
+            if (s == null)
             {
-                return new BinaryStlReader<TTriangle, TVertex, TNormal>(CreateTriangle, CreateVertex, CreateNormal).ReadFromStream(s);
+                throw new ArgumentNullException("s", "Stream must not be null.");
             }
 
-            return new AsciiStlReader<TTriangle, TVertex, TNormal>(CreateTriangle, CreateVertex, CreateNormal).ReadFromStream(s);
+            var reader = GetReaderFor(s);
+            return reader.ReadFromStream(s);
         }
 
-        public static bool IsBinaryStl(Stream stream)
+        private IStlReader<TTriangle> GetReaderFor(Stream s)
         {
-            try
+            if (StlFile.IsBinary(s))
             {
-                using (var r = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
-                {
-                    var buf = new char[20];
-                    r.ReadBlock(buf, 0, 20);
-                    var start = new string(buf);
-                    return !start.TrimStart().StartsWith("solid", StringComparison.OrdinalIgnoreCase);
-                }
+                return new BinaryStlReader<TTriangle, TVertex, TNormal>(CreateTriangle, CreateVertex, CreateNormal);
             }
-            finally
-            {
-                stream.Seek(0, SeekOrigin.Begin);
-            }
+
+            return new AsciiStlReader<TTriangle, TVertex, TNormal>(CreateTriangle, CreateVertex, CreateNormal);
         }
     }
 }

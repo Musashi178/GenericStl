@@ -23,12 +23,23 @@ namespace GenericStl
         {
             try
             {
-                using (var r = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
+                using(var r = new BinaryReader(stream, Encoding.UTF8, true))
                 {
-                    var buf = new char[20];
-                    r.ReadBlock(buf, 0, 20);
-                    var start = new string(buf);
-                    return !start.TrimStart().StartsWith("solid", StringComparison.OrdinalIgnoreCase);
+                    var firstChars = new string(r.ReadChars(5));
+
+                    if (!string.Equals(firstChars, "solid", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+
+                    var numberOfCharsToReadAtEnd = "endsolid".Length + 300;
+                    numberOfCharsToReadAtEnd = numberOfCharsToReadAtEnd > stream.Length ? (int)stream.Length : numberOfCharsToReadAtEnd;
+
+                    stream.Seek(-numberOfCharsToReadAtEnd , SeekOrigin.End);
+
+                    var lastChars = new string(r.ReadChars(numberOfCharsToReadAtEnd));
+
+                    return !lastChars.Contains("endsolid");
                 }
             }
             finally

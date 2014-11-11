@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AsciiStlReaderTests.cs" />
     <Compile Include="AsciiStlWriterTests.cs" />
+    <Compile Include="StlFileTests.cs" />
     <Compile Include="StlReaderBaseTests.cs" />
     <Compile Include="StlReaderTests.cs" />
     <Compile Include="StlWriterBaseTests.cs" />
@@ -99,6 +100,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\binary_block.stl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\binary_block_with_solid_header.stl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

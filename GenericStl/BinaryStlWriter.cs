@@ -60,14 +60,11 @@ namespace GenericStl
                 throw new ArgumentNullException("triangles");
             }
 
-            if (header != null && header.Length != 80)
-            {
-                throw new ArgumentException("header must have a size of 80 bytes.", "header");
-            }
+            var hdr = PrepareHeader(header);
 
             using (var w = new BinaryWriter(s, new UTF8Encoding(false, true), true))
             {
-                WriteHeader(w, header ?? new byte[HeaderLengthInByte]);
+                WriteHeader(w, hdr);
                 WriteLength(w, 0);
 
                 var length = 0;
@@ -82,6 +79,32 @@ namespace GenericStl
                 s.Seek(HeaderLengthInByte, SeekOrigin.Begin);
                 WriteLength(w, length);
             }
+        }
+
+        private static byte[] PrepareHeader(byte[] header)
+        {
+            if (header == null)
+            {
+                return new byte[HeaderLengthInByte];
+            }
+
+            if (header.Length == HeaderLengthInByte)
+            {
+                return header;
+            }
+
+            var newHdr = new byte[HeaderLengthInByte];
+
+            if (header.Length < HeaderLengthInByte)
+            {
+               Array.Copy(header, newHdr, header.Length);
+            }
+            else if (header.Length > HeaderLengthInByte)
+            {
+                Array.Copy(header, newHdr, newHdr.Length);
+            }
+
+            return newHdr;
         }
 
         private void WriteTriangle(BinaryWriter w, TTriangle t)

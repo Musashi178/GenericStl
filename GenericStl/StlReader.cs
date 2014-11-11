@@ -10,6 +10,10 @@ namespace GenericStl
         {
         }
 
+        public StlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> dataStructureCreator) : base(dataStructureCreator)
+        {
+        }
+
         public override IEnumerable<TTriangle> ReadFromFile(string fileName)
         {
             using (var fs = File.OpenRead(fileName))

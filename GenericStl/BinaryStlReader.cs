@@ -8,15 +8,14 @@ namespace GenericStl
 {
     public class BinaryStlReader<TTriangle, TVertex, TNormal> : StlReaderBase<TTriangle, TVertex, TNormal>
     {
-        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal) 
+        public BinaryStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal)
             : base(createTriangle, createVertex, createNormal)
         {
-
         }
 
         public BinaryStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
             : base(structureCreator)
-        {  
+        {
         }
 
         public override IEnumerable<TTriangle> ReadFromFile(string fileName)
@@ -34,19 +33,18 @@ namespace GenericStl
                 throw new ArgumentNullException("s");
             }
 
-            using (var reader = new BinaryReader(s, Encoding.UTF8, true))
+            var reader = new BinaryReader(s, Encoding.UTF8); // do not dispose this reader as it would dispose the stream
+
+            reader.ReadBytes(80); //header
+
+            var numTriangles = reader.ReadInt32();
+
+            for (var i = 0; i < numTriangles; ++i)
             {
-                reader.ReadBytes(80); //header
-
-                var numTriangles = reader.ReadInt32();
-
-                for (var i = 0; i < numTriangles; ++i)
-                {
-                    yield return ReadTriangle(reader);
-                }
-
-                Debug.Assert(s.Position == s.Length);
+                yield return ReadTriangle(reader);
             }
+
+            Debug.Assert(s.Position == s.Length);
         }
 
 
@@ -78,7 +76,7 @@ namespace GenericStl
             using (var s = new MemoryStream(data, false))
             {
                 foreach (var triangle in ReadFromStream(s)) yield return triangle;
-            }    
+            }
         }
     }
 }

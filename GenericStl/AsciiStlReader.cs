@@ -24,7 +24,7 @@ namespace GenericStl
 
         public AsciiStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
             : base(structureCreator)
-        {  
+        {
         }
 
         public IEnumerable<TTriangle> Read(IEnumerable<string> fileContent)
@@ -55,12 +55,10 @@ namespace GenericStl
 
         private static IEnumerable<string> ReadLines(Stream s)
         {
-            using (var r = new StreamReader(s, Encoding.UTF8, true, DefaultBufferSize, true))
+            var r = new StreamReader(s, Encoding.UTF8, true, DefaultBufferSize); // do not dispose this reader as it would dispose the stream
+            while (!r.EndOfStream)
             {
-                while (!r.EndOfStream)
-                {
-                    yield return r.ReadLine();
-                }
+                yield return r.ReadLine();
             }
         }
 

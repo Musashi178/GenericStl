@@ -62,23 +62,21 @@ namespace GenericStl
 
             var hdr = PrepareHeader(header);
 
-            using (var w = new BinaryWriter(s, new UTF8Encoding(false, true), true))
+            var w = new BinaryWriter(s, new UTF8Encoding(false, true)); // do not dispose this reader as it would dispose the stream
+            WriteHeader(w, hdr);
+            WriteLength(w, 0);
+
+            var length = 0;
+
+            foreach (var triangle in triangles)
             {
-                WriteHeader(w, hdr);
-                WriteLength(w, 0);
+                length++;
 
-                var length = 0;
-
-                foreach (var triangle in triangles)
-                {
-                    length++;
-
-                    WriteTriangle(w, triangle);
-                }
-
-                s.Seek(HeaderLengthInByte, SeekOrigin.Begin);
-                WriteLength(w, length);
+                WriteTriangle(w, triangle);
             }
+
+            s.Seek(HeaderLengthInByte, SeekOrigin.Begin);
+            WriteLength(w, length);
         }
 
         private static byte[] PrepareHeader(byte[] header)
@@ -97,7 +95,7 @@ namespace GenericStl
 
             if (header.Length < HeaderLengthInByte)
             {
-               Array.Copy(header, newHdr, header.Length);
+                Array.Copy(header, newHdr, header.Length);
             }
             else if (header.Length > HeaderLengthInByte)
             {

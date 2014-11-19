@@ -27,7 +27,7 @@ skip_tags: true
 
 # scripts that are called at very beginning, before repo cloning
 init:
-  - git config --global core.autocrlf input
+  - git config --global core.autocrlf true
 
 # enable patching of AssemblyInfo.* files
 assembly_info:

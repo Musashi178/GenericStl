@@ -47,8 +47,8 @@ namespace GenericStl
             }
 
             var w = new StreamWriter(s, new UTF8Encoding(false, true), 1024); // do not dispose this reader as it would dispose the stream
-
             WriteTo(w, triangles);
+            w.Flush();
         }
 
         public string Write(IEnumerable<TTriangle> triangles)

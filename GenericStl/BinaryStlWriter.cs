@@ -77,6 +77,7 @@ namespace GenericStl
 
             s.Seek(HeaderLengthInByte, SeekOrigin.Begin);
             WriteLength(w, length);
+            w.Flush();
         }
 
         private static byte[] PrepareHeader(byte[] header)

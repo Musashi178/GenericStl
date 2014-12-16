@@ -72,3 +72,9 @@ build:
 test:
   assemblies:
     - '**\*.Tests.dll'
+
+#---------------------------------#
+#       cache configuration       #
+#---------------------------------#
+cache:
+  - packages                     # preserve "packages" directory in the root of build folder

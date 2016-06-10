@@ -75,24 +75,29 @@ namespace GenericStl
             return CreateTriangle(v1, v2, v3, normal);
         }
 
-        private TNormal GetNormal(string line)
+        public TNormal GetNormal(string line)
         {
-            var segs = line.Split(' ');
+            var tokens = Tokenize(line);
 
-            Debug.Assert(string.Equals(segs[0], "facet", StringComparison.InvariantCultureIgnoreCase));
-            Debug.Assert(string.Equals(segs[1], "normal", StringComparison.InvariantCultureIgnoreCase));
+            Debug.Assert(string.Equals(tokens[0], "facet", StringComparison.InvariantCultureIgnoreCase));
+            Debug.Assert(string.Equals(tokens[1], "normal", StringComparison.InvariantCultureIgnoreCase));
 
-            return CreateNormal(_parseFloat(segs[2]), _parseFloat(segs[3]), _parseFloat(segs[4]));
+            return CreateNormal(_parseFloat(tokens[2]), _parseFloat(tokens[3]), _parseFloat(tokens[4]));
+        }
+
+        private static string[] Tokenize(string line)
+        {
+            return line.Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
         }
 
 
-        private TVertex GetVertex(string line)
+        public TVertex GetVertex(string line)
         {
-            var segs = line.Split(' ');
+            var tokens = Tokenize(line);
 
-            Debug.Assert(string.Equals(segs[0], "vertex", StringComparison.InvariantCultureIgnoreCase));
+            Debug.Assert(string.Equals(tokens[0], "vertex", StringComparison.InvariantCultureIgnoreCase));
 
-            return CreateVertex(_parseFloat(segs[1]), _parseFloat(segs[2]), _parseFloat(segs[3]));
+            return CreateVertex(_parseFloat(tokens[1]), _parseFloat(tokens[2]), _parseFloat(tokens[3]));
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Text;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using GenericStl.Tests.TestDataStructures;
-using NUnit.Framework;
+using Xunit;
 
 namespace GenericStl.Tests
 {
-    [TestFixture]
+    
     [UseReporter(typeof (NUnitReporter))]
     public class BinaryStlWriterTests : StlWriterBaseTests<BinaryStlWriter<Triangle, Vertex, Normal>>
     {
@@ -24,7 +24,7 @@ namespace GenericStl.Tests
             return new BinaryStlWriter<Triangle, Vertex, Normal>(extractor);
         }
 
-        [Test]
+        [Fact]
         public void WriteFile_WithBlock_ReturnsExpectedResult()
         {
             var namer = Approvals.GetDefaultNamer();
@@ -33,14 +33,14 @@ namespace GenericStl.Tests
             Approvals.Verify(new FileInfo(file));
         }
 
-        [Test]
+        [Fact]
         public void Write_WithBlock_ReturnsExpectedResult()
         {
             var result = ObjectUnderTest.Write(TestHelpers.BlockExpectedResult);
             Approvals.VerifyBinaryFile(result, ".stl");
         }
 
-        [Test]
+        [Fact]
         public void Write_WithSmallHeader_ReturnsExpectedResult()
         {
             var hdr = new ASCIIEncoding().GetBytes("short header");
@@ -48,7 +48,7 @@ namespace GenericStl.Tests
             Approvals.VerifyBinaryFile(result, ".stl");
         }
 
-        [Test]
+        [Fact]
         public void Write_WithLargeHeader_ReturnsExpectedResult()
         {
             var hdr = string.Join("", Enumerable.Repeat("abcdefghijklmnopqrstuvwxyz1234567890", 10));

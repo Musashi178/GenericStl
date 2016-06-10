@@ -3,21 +3,20 @@ using System.IO;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using GenericStl.Tests.TestDataStructures;
-using NUnit.Framework;
+using Xunit;
 
 namespace GenericStl.Tests
 {
-    [TestFixture]
+    
     [UseReporter(typeof (NUnitReporter))]
     public class AsciiStlWriterTests : StlWriterBaseTests<AsciiStlWriter<Triangle, Vertex, Normal>>
     {
-        [SetUp]
-        public void SetUp()
+        public AsciiStlWriterTests()
         {
             _objectUnderTest = new AsciiStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal);
         }
 
-        private AsciiStlWriter<Triangle, Vertex, Normal> _objectUnderTest;
+        private readonly AsciiStlWriter<Triangle, Vertex, Normal> _objectUnderTest;
 
         protected override AsciiStlWriter<Triangle, Vertex, Normal> CreateWriter(Func<Triangle, Tuple<Vertex, Vertex, Vertex, Normal>> extractTriangle, Func<Vertex, Tuple<float, float, float>> extractVertex, Func<Normal, Tuple<float, float, float>> extractNormal)
         {
@@ -29,7 +28,7 @@ namespace GenericStl.Tests
             return new AsciiStlWriter<Triangle, Vertex, Normal>(extractor);
         }
 
-        [Test]
+        [Fact]
         public void WriteFile_WithBlock_ReturnsExpectedResult()
         {
             var namer = Approvals.GetDefaultNamer();
@@ -38,7 +37,7 @@ namespace GenericStl.Tests
             Approvals.Verify(new FileInfo(file));
         }
 
-        [Test]
+        [Fact]
         public void Write_WithBlock_ReturnsExpectedResult()
         {
             var result = _objectUnderTest.Write(TestHelpers.BlockExpectedResult);

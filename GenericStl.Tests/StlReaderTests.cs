@@ -6,30 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
-using NUnit.Framework;
+using Xunit;
 
 namespace GenericStl.Tests
 {
     public class StlReaderTests
     {
-        [SetUp]
-        public void SetUp()
+        public StlReaderTests()
         {
             _objectUnderTest = new StlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal);
         }
 
-        public IEnumerable StlFiles
-        {
-            get
-            {
-                yield return new TestCaseData(@".\TestData\ascii_block.stl").SetName("Ascii file");
-                yield return new TestCaseData(@".\TestData\binary_block.stl").SetName("Binary file");
-            }
-        } 
-        private StlReader<Triangle, Vertex, Normal> _objectUnderTest;
+        private readonly StlReader<Triangle, Vertex, Normal> _objectUnderTest;
 
-        [Test]
-        [TestCaseSource("StlFiles")]
+        [Theory]
+        [InlineData(@".\TestData\ascii_block.stl")]
+        [InlineData(@".\TestData\binary_block.stl")]
         public void ReadFromFile_ReturnsExpectedTriangles(string fileName)
         {
             var result = _objectUnderTest.ReadFromFile(fileName);

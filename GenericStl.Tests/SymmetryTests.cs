@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
-using NUnit.Framework;
+using Xunit;
 using Ploeh.AutoFixture;
+using Xunit.Extensions;
 
 namespace GenericStl.Tests
 {
-    [TestFixture]
+    
     public class SymmetryTests
     {
         private readonly Random _randomizer = new Random(DateTime.Now.Millisecond);
 
-        public static IEnumerable ReaderWriters
+        public static IEnumerable<object[]> ReaderWriters
         {
             get
             {
-                yield return new TestCaseData(new AsciiStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal), new AsciiStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal)).SetName("Ascii");
-                yield return new TestCaseData(new BinaryStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal), new BinaryStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal)).SetName("Binary");
+                yield return new object[]{new AsciiStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal), new AsciiStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal)};
+                yield return new object[]{new BinaryStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal), new BinaryStlWriter<Triangle, Vertex, Normal>(TestDataStructureHelpers.ExtractTriangle, TestDataStructureHelpers.ExtractVertex, TestDataStructureHelpers.ExtractNormal)};
             }
         }
 
-        [Test]
-        [TestCaseSource("ReaderWriters")]
+        [Theory]
+        [MemberData("ReaderWriters")]
         public void WriteRead_ShouldReturnTheInputData(IStlReader<Triangle> r, IStlWriter<Triangle> w)
         {
             var fixture = new Fixture()
@@ -31,8 +33,8 @@ namespace GenericStl.Tests
                 RepeatCount = _randomizer.Next(1, 1000)
             };
 
-            var muliplier = (float) _randomizer.NextDouble();
-            fixture.Customize<float>(c => c.FromFactory<int>(i => i*muliplier));
+            var multiplier = (float) _randomizer.NextDouble();
+            fixture.Customize<float>(c => c.FromFactory<int>(i => i*multiplier));
 
             var expected = fixture.Create<Triangle[]>();
 
@@ -46,7 +48,8 @@ namespace GenericStl.Tests
 
                 actual.Should().BeEquivalentTo(expected);
 
-                new Action(() => ms.Seek(0, SeekOrigin.Begin)).ShouldNotThrow<ObjectDisposedException>("ReadFromStream should not close the stream.");
+                var actionOnStream = new Action(() => ms.Seek(0, SeekOrigin.Begin));
+                actionOnStream.ShouldNotThrow<ObjectDisposedException>("ReadFromStream should not close the stream.");
             }
         }
     }

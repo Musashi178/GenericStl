@@ -3,28 +3,22 @@ using System.IO;
 using System.Runtime.InteropServices;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
-using NUnit.Framework;
+using Xunit;
 using Ploeh.AutoFixture;
 
 namespace GenericStl.Tests
 {
-    [TestFixture]
+    
     public class AsciiStlReaderTests : StlReaderBaseTests<AsciiStlReader<Triangle, Vertex, Normal>>
     {
-        [SetUp]
-        public void SetUp()
+        public  AsciiStlReaderTests()
         {
             _fixture = new Fixture();
             _objectUnderTest = new AsciiStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal);
         }
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-        }
-
         private const string AsciiTestFile = @".\TestData\ascii_block.stl";
-        private AsciiStlReader<Triangle, Vertex, Normal> _objectUnderTest;
+        private readonly AsciiStlReader<Triangle, Vertex, Normal> _objectUnderTest;
         private Fixture _fixture;
 
         protected override AsciiStlReader<Triangle, Vertex, Normal> CreateReader(Func<Vertex, Vertex, Vertex, Normal, Triangle> createTriangle, Func<float, float, float, Vertex> createVertex, Func<float, float, float, Normal> createNormal)
@@ -37,7 +31,7 @@ namespace GenericStl.Tests
             return new AsciiStlReader<Triangle, Vertex, Normal>(structureCreator);
         }
 
-        [Test]
+        [Fact]
         public void ReadFile_WithAsciiBlockFile_ReturnsExpectedTriangles()
         {
             var result = _objectUnderTest.ReadFromFile(AsciiTestFile);
@@ -45,7 +39,7 @@ namespace GenericStl.Tests
             result.Should().BeEquivalentTo(TestHelpers.BlockExpectedResult);
         }
 
-        [Test]
+        [Fact]
         public void Read_WithAsciiBlockFile_ReturnsTheExpectedTriangles()
         {
             var stlFileContent = File.ReadAllLines(AsciiTestFile);

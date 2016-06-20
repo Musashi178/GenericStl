@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using GenericStl.Tests.TestDataStructures;
 using NUnit.Framework;
+using Ploeh.AutoFixture;
 
 namespace GenericStl.Tests
 {
@@ -12,6 +14,7 @@ namespace GenericStl.Tests
         [SetUp]
         public void SetUp()
         {
+            _fixture = new Fixture();
             _objectUnderTest = new AsciiStlReader<Triangle, Vertex, Normal>(TestDataStructureHelpers.CreateTriangle, TestDataStructureHelpers.CreateVertex, TestDataStructureHelpers.CreateNormal);
         }
 
@@ -22,6 +25,7 @@ namespace GenericStl.Tests
 
         private const string AsciiTestFile = @".\TestData\ascii_block.stl";
         private AsciiStlReader<Triangle, Vertex, Normal> _objectUnderTest;
+        private Fixture _fixture;
 
         protected override AsciiStlReader<Triangle, Vertex, Normal> CreateReader(Func<Vertex, Vertex, Vertex, Normal, Triangle> createTriangle, Func<float, float, float, Vertex> createVertex, Func<float, float, float, Normal> createNormal)
         {
@@ -49,6 +53,28 @@ namespace GenericStl.Tests
             var result = _objectUnderTest.Read(stlFileContent);
 
             result.Should().BeEquivalentTo(TestHelpers.BlockExpectedResult);
+        }
+
+        [Test]
+        public void GetNormal_WithLineSeparatingTheTokensWithMultipleWhitespaces_ReturnsTheExpectedNormal()
+        {
+            var expectedNormal = _fixture.Create<Normal>();
+            var line = string.Format(" facet  normal    {0}  {1} {2}", expectedNormal.X, expectedNormal.Y, expectedNormal.Z);
+
+            var result = _objectUnderTest.GetNormal(line);
+
+            result.Should().Be(expectedNormal);
+        }
+
+        [Test]
+        public void GetVertex_WithLineSeparatingTheTokensWithMultipleWhitespaces_ReturnsTheExpectedVertex()
+        {
+            var expectedVertex = _fixture.Create<Vertex>();
+            var line = string.Format("vertex    {0}  {1} {2}", expectedVertex.X, expectedVertex.Y, expectedVertex.Z);
+
+            var result = _objectUnderTest.GetVertex(line);
+
+            result.Should().Be(expectedVertex);
         }
     }
 }

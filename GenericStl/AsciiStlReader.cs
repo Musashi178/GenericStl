@@ -14,12 +14,11 @@ namespace GenericStl
     public class AsciiStlReader<TTriangle, TVertex, TNormal> : StlReaderBase<TTriangle, TVertex, TNormal>
     {
         private const int DefaultBufferSize = 1024;
-        private readonly Func<string, float> _parseFloat;
+        private readonly Func<string, float> _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
 
         public AsciiStlReader(Func<TVertex, TVertex, TVertex, TNormal, TTriangle> createTriangle, Func<float, float, float, TVertex> createVertex, Func<float, float, float, TNormal> createNormal)
             : base(createTriangle, createVertex, createNormal)
         {
-            _parseFloat = f => float.Parse(f, CultureInfo.InvariantCulture);
         }
 
         public AsciiStlReader(IDataStructureCreator<TTriangle, TVertex, TNormal> structureCreator)
@@ -87,7 +86,7 @@ namespace GenericStl
 
         private static string[] Tokenize(string line)
         {
-            return line.Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            return line.Split(' ', '\t').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
         }
 
 

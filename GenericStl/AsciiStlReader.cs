@@ -40,10 +40,7 @@ namespace GenericStl
         {
             using (var fs = File.OpenRead(fileName))
             {
-                foreach (var triangle in ReadFromStream(fs))
-                {
-                    yield return triangle;
-                }
+                return ReadFromStream(fs);
             }
         }
 

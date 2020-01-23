@@ -75,7 +75,7 @@ namespace GenericStl
         {
             using (var s = new MemoryStream(data, false))
             {
-                foreach (var triangle in ReadFromStream(s)) yield return triangle;
+                return ReadFromStream(s);
             }
         }
     }
